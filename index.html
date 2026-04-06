@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WonkeyLab</title>
+  <style>
+    :root {
+      --bg: #f7f8fc;
+      --surface: rgba(255, 255, 255, 0.78);
+      --surface-strong: #ffffff;
+      --text: #171a21;
+      --muted: #667085;
+      --line: rgba(23, 26, 33, 0.08);
+      --primary: #4f46e5;
+      --primary-soft: rgba(79, 70, 229, 0.10);
+      --accent: #06b6d4;
+      --accent-soft: rgba(6, 182, 212, 0.12);
+      --shadow: 0 20px 60px rgba(16, 24, 40, 0.10);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Pretendard, "Noto Sans KR", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(79,70,229,0.10), transparent 26%),
+        radial-gradient(circle at top right, rgba(6,182,212,0.10), transparent 22%),
+        linear-gradient(180deg, #f6f8ff 0%, #f7f8fc 40%, #ffffff 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(247, 248, 252, 0.72);
+      border-bottom: 1px solid rgba(23, 26, 33, 0.06);
+    }
+
+    .nav-inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow: 0 14px 26px rgba(79, 70, 229, 0.26);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-text span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .hero {
+      padding: 82px 0 42px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      padding: 10px 15px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 6vw, 72px);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-copy {
+      margin-top: 22px;
+      font-size: 18px;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 22px;
+      border-radius: 999px;
+      font-weight: 800;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow: 0 16px 36px rgba(79, 70, 229, 0.24);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 34px;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -80px -90px auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(6,182,212,0.22), transparent 65%);
+    }
+
+    .panel-title {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .signature-box {
+      padding: 20px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.62));
+      border: 1px solid var(--line);
+    }
+
+    .signature-name {
+      font-size: 34px;
+      letter-spacing: -0.05em;
+      font-weight: 900;
+      margin: 0;
+    }
+
+    .signature-sub {
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 10px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .stat {
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 24px;
+      letter-spacing: -0.04em;
+    }
+
+    .section {
+      padding: 44px 0;
+    }
+
+    .section-heading {
+      margin: 0 0 10px;
+      font-size: 32px;
+      letter-spacing: -0.04em;
+    }
+
+    .section-sub {
+      margin: 0 0 26px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 780px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.80);
+      border: 1px solid rgba(255,255,255,0.88);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+      padding: 26px;
+    }
+
+    .icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 21px;
+      letter-spacing: -0.03em;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .glass {
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.90);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid var(--line);
+      padding: 15px 16px;
+      border-radius: 18px;
+    }
+
+    .pill {
+      white-space: nowrap;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--accent-soft);
+      color: #0891b2;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .contact-box {
+      text-align: center;
+      padding: 42px 24px;
+      border-radius: 34px;
+      background: linear-gradient(135deg, #111827, #182339 60%, #1d4ed8);
+      color: white;
+      box-shadow: 0 26px 60px rgba(17, 24, 39, 0.28);
+    }
+
+    .contact-box p {
+      max-width: 720px;
+      margin: 14px auto 0;
+      color: rgba(255,255,255,0.80);
+      line-height: 1.8;
+    }
+
+    .footer {
+      padding: 30px 0 50px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    @media (max-width: 940px) {
+      .hero-grid,
+      .grid-3,
+      .split {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links { display: none; }
+      .hero { padding-top: 50px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="brand-mark">W</div>
+        <div class="brand-text">
+          <strong>WonkeyLab</strong>
+          <span>Personal Studio · Mobile & Digital Products</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="#about">소개</a>
+        <a href="#identity">브랜드</a>
+        <a href="#services">가치</a>
+        <a href="#contact">문의</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Independent Business · WonkeyLab</div>
+          <h1>
+            작지만 선명한 아이디어를<br />
+            <span class="gradient-text">좋은 제품 경험</span>으로 만듭니다
+          </h1>
+          <p class="hero-copy">
+            WonkeyLab은 개인사업자 기반의 작은 디지털 스튜디오입니다. 복잡함보다 명확함, 과장보다 완성도를
+            우선하며 모바일 앱과 디지털 서비스를 차분하게 만들어갑니다.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#about">브랜드 소개</a>
+            <a class="btn btn-secondary" href="#contact">연락하기</a>
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <div class="panel-title">Brand Snapshot</div>
+          <div class="signature-box">
+            <p class="signature-name">WonkeyLab</p>
+            <div class="signature-sub">
+              실용적인 모바일 경험, 단정한 인터페이스, 오래 사용할수록 편안한 흐름을 지향하는 개인 스튜디오.
+            </div>
+          </div>
+          <div class="stat-grid">
+            <div class="stat">
+              <span>운영 형태</span>
+              <strong>개인사업자</strong>
+            </div>
+            <div class="stat">
+              <span>핵심 분야</span>
+              <strong>앱 · 서비스</strong>
+            </div>
+            <div class="stat">
+              <span>지향점</span>
+              <strong>Simple & Useful</strong>
+            </div>
+            <div class="stat">
+              <span>브랜드 톤</span>
+              <strong>Calm & Clean</strong>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container">
+        <h2 class="section-heading">WonkeyLab은 이렇게 일합니다</h2>
+        <p class="section-sub">
+          사용자의 시간을 아껴주는 구조, 부담 없는 인터페이스, 그리고 작은 기능도 정성 있게 다듬는 태도를
+          중요하게 생각합니다. 보여주기 위한 복잡함보다 실제로 오래 쓸 수 있는 제품의 밀도를 추구합니다.
+        </p>
+        <div class="grid-3" id="services">
+          <article class="card">
+            <div class="icon-box">01</div>
+            <h3>명확한 문제 해결</h3>
+            <p>기능을 늘리기보다 사용자가 실제로 자주 겪는 불편을 줄이는 방향으로 제품을 설계합니다.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box">02</div>
+            <h3>단정한 사용자 경험</h3>
+            <p>처음 접해도 바로 이해되는 흐름과 깔끔한 인터페이스를 통해 편안한 사용성을 제공합니다.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box">03</div>
+            <h3>꾸준한 개선과 운영</h3>
+            <p>작게 시작하더라도 지속적으로 다듬고 개선해 더 안정적이고 신뢰할 수 있는 서비스로 발전시킵니다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="identity">
+      <div class="container split">
+        <div class="glass">
+          <div class="panel-title">Brand Identity</div>
+          <h2 class="section-heading" style="margin-top:0;">차분하지만 분명한 브랜드</h2>
+          <p class="section-sub" style="margin-bottom:0; max-width:none;">
+            WonkeyLab이라는 이름에는 혼자서도 끝까지 만들어내는 집요함과, 작더라도 자기만의 방식으로 완성도를
+            높여가는 태도를 담았습니다. 빠르게 소비되는 결과물보다 오래 남는 제품 감각을 중요하게 생각합니다.
+          </p>
+        </div>
+        <div class="glass">
+          <div class="panel-title">What We Value</div>
+          <div class="list">
+            <div class="list-item">
+              <span>단순하지만 충분한 기능 설계</span>
+              <span class="pill">Clarity</span>
+            </div>
+            <div class="list-item">
+              <span>과하지 않은 세련된 비주얼</span>
+              <span class="pill">Clean UI</span>
+            </div>
+            <div class="list-item">
+              <span>실제 사용 환경을 고려한 개선</span>
+              <span class="pill">Practical</span>
+            </div>
+            <div class="list-item">
+              <span>신뢰를 쌓는 지속적인 운영</span>
+              <span class="pill">Steady</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact-box">
+          <h2 class="section-heading" style="margin:0; color:white;">WonkeyLab과 연결하기</h2>
+          <p>
+            앱 관련 문의, 사업 제안, 협업 문의, 제품 피드백이 있다면 아래 연락처로 편하게 남겨 주세요.
+            실제 운영에 도움이 되는 의견을 반갑게 기다립니다.
+          </p>
+          <div class="cta-row" style="justify-content:center; margin-top:26px;">
+            <a class="btn btn-primary" href="mailto:contact@example.com">contact@example.com</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© 2026 WonkeyLab. All rights reserved.</div>
+  </footer>
+</body>
+</html>
